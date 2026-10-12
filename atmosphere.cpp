@@ -36,8 +36,14 @@
  *
  */
 
-#include <geo/geo.h>
 #include "atmosphere.h"
+
+#include <cmath>
+
+namespace
+{
+constexpr float kStandardGravity = 9.80665f;
+}
 namespace atmosphere
 {
 
@@ -50,7 +56,7 @@ float getPressureFromAltitude(const float altitude_m)
 {
 
 	return kPressRefSeaLevelPa * powf((altitude_m * kTempGradient + kTempRefKelvin) / kTempRefKelvin,
-					  -CONSTANTS_ONE_G / (kTempGradient * kAirGasConstant));
+					  -kStandardGravity / (kTempGradient * kAirGasConstant));
 }
 float getAltitudeFromPressure(float pressure_pa, float pressure_sealevel_pa)
 {
@@ -67,7 +73,7 @@ float getAltitudeFromPressure(float pressure_pa, float pressure_sealevel_pa)
 	 * h = -------------------------------  + h1
 	 *                   a
 	 */
-	return (((powf(pressure_ratio, (-(kTempGradient * kAirGasConstant) / CONSTANTS_ONE_G))) * kTempRefKelvin) -
+	return (((powf(pressure_ratio, (-(kTempGradient * kAirGasConstant) / kStandardGravity))) * kTempRefKelvin) -
 		kTempRefKelvin) / kTempGradient;
 
 }
